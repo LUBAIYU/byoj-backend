@@ -4,11 +4,13 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
-
-import lombok.Data;
+import java.time.LocalDateTime;
 
 /**
  * 题目表
@@ -17,6 +19,9 @@ import lombok.Data;
  */
 @TableName(value = "question")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Question implements Serializable {
     /**
      * 题目ID
@@ -67,12 +72,12 @@ public class Question implements Serializable {
     /**
      * 创建时间
      */
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否删除（0-未删除，1-删除）
