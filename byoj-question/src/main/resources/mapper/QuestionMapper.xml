@@ -25,4 +25,22 @@
         judge_config,submit_num,accept_num,
         create_time,update_time,is_deleted
     </sql>
+
+    <select id="pageQuestionVos" resultType="com.by.model.entity.Question">
+        select *
+        from question q
+        <where>
+            <if test="dto.id != null">
+                and q.id = #{dto.id}
+            </if>
+            <if test="dto.title != null and dto.title != ''">
+                and q.title like concat('%',#{dto.title},'%')
+            </if>
+            <if test="dto.tags != null and dto.tags != ''">
+                and q.tags like concat('%',#{dto.tags},'%')
+            </if>
+        </where>
+        order by
+        q.create_time desc
+    </select>
 </mapper>

@@ -4,7 +4,6 @@ import com.by.model.entity.JudgeCase;
 import com.by.model.entity.JudgeConfig;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -13,32 +12,31 @@ import java.util.List;
  * @author lzh
  */
 @Data
-public class QuestionAddDTO implements Serializable {
+public class QuestionUpdateDTO implements Serializable {
+    /**
+     * 题目ID
+     */
+    @NotNull(message = "id不能为null")
+    private Long id;
+
     /**
      * 标题
      */
-    @NotNull(message = "标题不能为null")
-    @NotBlank(message = "标题不能为空")
     private String title;
 
     /**
      * 题目内容
      */
-    @NotNull(message = "题目内容不能为null")
-    @NotBlank(message = "题目内容不能为空")
     private String content;
 
     /**
      * 题目答案
      */
-    @NotNull(message = "题目答案不能为null")
-    @NotBlank(message = "题目答案不能为空")
     private String answer;
 
     /**
-     * 题目标签列表（JSON数组）
+     * 题目标签
      */
-    @NotNull(message = "题目标签不能为null")
     private List<String> tagList;
 
     /**

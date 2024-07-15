@@ -1,4 +1,4 @@
-package com.by.model.dto;
+package com.by.model.entity;
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author lzh
  */
 @Data
-public class JudgeConfigDTO implements Serializable {
+public class JudgeConfig implements Serializable {
     /**
      * 内存限制
      */
