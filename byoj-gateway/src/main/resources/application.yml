@@ -1,0 +1,36 @@
+server:
+  port: 8000
+spring:
+  # 服务名称
+  application:
+    name: byoj-gateway
+  main:
+    web-application-type: reactive
+  cloud:
+    # 网关配置
+    gateway:
+      routes:
+        - id: byoj-user
+          uri: lb://byoj-user
+          predicates:
+            - Path=/oj/user/**
+        - id: byoj-question
+          uri: lb://byoj-question
+          predicates:
+            - Path=/oj/question/**
+        - id: byoj-judge
+          uri: lb://byoj-judge
+          predicates:
+            - Path=/oj/judge/**
+    # nacos配置
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+# knife4j配置
+knife4j:
+  gateway:
+    enabled: true
+    strategy: discover
+    discover:
+      enabled: true
+      version: swagger2

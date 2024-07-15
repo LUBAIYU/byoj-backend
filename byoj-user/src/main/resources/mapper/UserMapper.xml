@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.by.user.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.by.model.entity.User">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userAccount" column="user_account" jdbcType="VARCHAR"/>
+        <result property="userPassword" column="user_password" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="userRole" column="user_role" jdbcType="TINYINT"/>
+        <result property="status" column="status" jdbcType="TINYINT"/>
+        <result property="salt" column="salt" jdbcType="CHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_account,user_password,
+        user_name,email,user_role,
+        status,salt,create_time,
+        update_time,is_deleted
+    </sql>
+
+    <select id="pageUserVo" resultType="com.by.model.vo.UserVO">
+        select
+        u.id,
+        u.user_account,
+        u.user_name,
+        u.email,
+        u.user_role,
+        u.status,
+        u.create_time,
+        u.update_time
+        from user u
+        <where>
+            <if test="dto.id != null">
+                and u.id = #{dto.id}
+            </if>
+            <if test="dto.userName != null and dto.userName != ''">
+                and u.userName like concat('%',#{dto.userName},'%')
+            </if>
+            <if test="dto.status != null">
+                and u.status = #{dto.status}
+            </if>
+        </where>
+        order by
+        u.create_time desc
+    </select>
+</mapper>

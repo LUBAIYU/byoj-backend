@@ -1,0 +1,39 @@
+server:
+  port: 8010
+  # 全局请求前缀
+  servlet:
+    context-path: /oj/user
+spring:
+  # 服务名称
+  application:
+    name: byoj-user
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # 数据源配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/byoj?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+  cloud:
+    # nacos配置
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+# mybatis-plus配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+# knife4j配置
+knife4j:
+  enable: true
+# JWT签名密钥
+jwt:
+  encrypt:
+    secretKey: aB9KlMzE3QwS5X8YcVtRgUyHnJmP2W6OxZs7TfLdNe

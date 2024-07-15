@@ -1,0 +1,23 @@
+server:
+  port: 8020
+  servlet:
+    context-path: /oj/question
+spring:
+  application:
+    name: byoj-question
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/byoj?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDeleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
