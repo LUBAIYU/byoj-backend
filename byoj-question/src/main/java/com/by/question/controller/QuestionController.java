@@ -1,10 +1,13 @@
 package com.by.question.controller;
 
+import com.by.common.enums.ErrorCode;
+import com.by.common.exception.ServerException;
 import com.by.common.utils.PageBean;
 import com.by.common.utils.Result;
 import com.by.model.dto.QuestionAddDTO;
 import com.by.model.dto.QuestionPageDTO;
 import com.by.model.dto.QuestionUpdateDTO;
+import com.by.model.entity.Question;
 import com.by.model.vo.QuestionVO;
 import com.by.question.service.QuestionService;
 import org.springframework.validation.annotation.Validated;
@@ -44,12 +47,27 @@ public class QuestionController {
     }
 
     @GetMapping("/{id}")
+    public Result<Question> getQuestion(@NotNull @PathVariable Long id) {
+        Question question = questionService.getById(id);
+        if (question == null) {
+            throw new ServerException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        return Result.success(question);
+    }
+
+    @GetMapping("/vo/{id}")
     public Result<QuestionVO> getQuestionVO(@NotNull @PathVariable Long id) {
         QuestionVO questionVO = questionService.getQuestionVoById(id);
         return Result.success(questionVO);
     }
 
     @PostMapping("/page")
+    public Result<PageBean<Question>> listQuestionsByPage(@Valid @RequestBody QuestionPageDTO questionPageDTO) {
+        PageBean<Question> pageBean = questionService.pageQuestions(questionPageDTO);
+        return Result.success(pageBean);
+    }
+
+    @PostMapping("/vo/page")
     public Result<PageBean<QuestionVO>> listQuestionVosByPage(@Valid @RequestBody QuestionPageDTO questionPageDTO) {
         PageBean<QuestionVO> pageBean = questionService.pageQuestionVos(questionPageDTO);
         return Result.success(pageBean);

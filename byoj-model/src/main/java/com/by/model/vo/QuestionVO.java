@@ -39,6 +39,16 @@ public class QuestionVO implements Serializable {
     private JudgeConfig judgeConfigVO;
 
     /**
+     * 总提交数
+     */
+    private Integer submitNum;
+
+    /**
+     * 总通过数
+     */
+    private Integer acceptNum;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

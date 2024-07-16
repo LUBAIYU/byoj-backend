@@ -44,10 +44,18 @@ public interface QuestionService extends IService<Question> {
     QuestionVO getQuestionVoById(Long id);
 
     /**
-     * 分页获取题目信息
+     * 分页获取题目信息（脱敏）
      *
      * @param questionPageDTO 分页请求体
      * @return 题目列表
      */
     PageBean<QuestionVO> pageQuestionVos(QuestionPageDTO questionPageDTO);
+
+    /**
+     * 分页获取题目信息（完整）
+     *
+     * @param questionPageDTO 分页请求体
+     * @return 题目列表
+     */
+    PageBean<Question> pageQuestions(QuestionPageDTO questionPageDTO);
 }

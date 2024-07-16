@@ -163,6 +163,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         }).collect(Collectors.toList());
         return PageBean.of(total, questionVOList);
     }
+
+    @Override
+    public PageBean<Question> pageQuestions(QuestionPageDTO questionPageDTO) {
+        IPage<Question> questionIpage = questionMapper.pageQuestionVos(questionPageDTO.toPagination(), questionPageDTO);
+        long total = questionIpage.getTotal();
+        List<Question> records = questionIpage.getRecords();
+        return PageBean.of(total, records);
+    }
 }
 
 
