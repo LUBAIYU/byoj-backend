@@ -39,6 +39,7 @@
             <if test="dto.tags != null and dto.tags != ''">
                 and q.tags like concat('%',#{dto.tags},'%')
             </if>
+            and q.is_deleted = 0
         </where>
         order by
         q.create_time desc

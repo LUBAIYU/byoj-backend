@@ -41,11 +41,12 @@
                 and u.id = #{dto.id}
             </if>
             <if test="dto.userName != null and dto.userName != ''">
-                and u.userName like concat('%',#{dto.userName},'%')
+                and u.user_name like concat('%',#{dto.userName},'%')
             </if>
             <if test="dto.status != null">
                 and u.status = #{dto.status}
             </if>
+            and u.is_deleted = 0
         </where>
         order by
         u.create_time desc
