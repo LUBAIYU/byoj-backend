@@ -2,9 +2,12 @@ package com.by.user.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.by.common.constant.UserConstants;
 import com.by.common.enums.ErrorCode;
@@ -122,6 +125,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateUserById(UserUpdateDTO userUpdateDTO) {
         User user = new User();
         BeanUtil.copyProperties(userUpdateDTO, user);
+        // 对输入密码进行加密
+        String userPassword = userUpdateDTO.getUserPassword();
+        if (StrUtil.isNotBlank(userPassword)) {
+            Long id = userUpdateDTO.getId();
+            User dbUser = this.getById(id);
+            String salt = dbUser.getSalt();
+            String encryptPassword = DigestUtil.md5Hex(userPassword + salt);
+            user.setUserPassword(encryptPassword);
+        }
         boolean res = this.updateById(user);
         if (!res) {
             throw new ServerException(ErrorCode.SYSTEM_ERROR);
@@ -147,5 +159,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         IPage<UserVO> pageRes = userMapper.pageUserVo(userPageDTO.toPagination(), userPageDTO);
         // 封装数据
         return PageBean.of(pageRes.getTotal(), pageRes.getRecords());
+    }
+
+    @Override
+    public PageBean<User> listUserByPage(UserPageDTO userPageDTO) {
+        // 添加分页参数
+        Page<User> page = new Page<>(userPageDTO.getCurrent(), userPageDTO.getPageSize());
+        // 添加查询参数
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getId, userPageDTO.getId());
+        queryWrapper.like(User::getUserName, userPageDTO.getUserName());
+        queryWrapper.eq(User::getStatus, userPageDTO.getStatus());
+        // 添加排序条件
+        page.addOrder(new OrderItem("createTime", false));
+        // 查询
+        this.page(page, queryWrapper);
+        // 封装数据返回
+        return PageBean.of(page.getTotal(), page.getRecords());
     }
 }
