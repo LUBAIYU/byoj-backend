@@ -6,10 +6,13 @@ import com.by.common.utils.PageBean;
 import com.by.common.utils.Result;
 import com.by.model.dto.QuestionAddDTO;
 import com.by.model.dto.QuestionPageDTO;
+import com.by.model.dto.QuestionSubmitPageDTO;
 import com.by.model.dto.QuestionUpdateDTO;
 import com.by.model.entity.Question;
+import com.by.model.vo.QuestionSubmitVO;
 import com.by.model.vo.QuestionVO;
 import com.by.question.service.QuestionService;
+import com.by.question.service.QuestionSubmitService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,9 @@ public class QuestionController {
 
     @Resource
     private QuestionService questionService;
+
+    @Resource
+    private QuestionSubmitService questionSubmitService;
 
     @PostMapping("/create")
     public Result<Long> createQuestion(@Valid @RequestBody QuestionAddDTO questionAddDTO) {
@@ -70,6 +76,12 @@ public class QuestionController {
     @PostMapping("/vo/page")
     public Result<PageBean<QuestionVO>> listQuestionVosByPage(@Valid @RequestBody QuestionPageDTO questionPageDTO) {
         PageBean<QuestionVO> pageBean = questionService.pageQuestionVos(questionPageDTO);
+        return Result.success(pageBean);
+    }
+
+    @PostMapping("/submit/page")
+    public Result<PageBean<QuestionSubmitVO>> listQuestionSubmitVosByPage(@Valid @RequestBody QuestionSubmitPageDTO questionSubmitPageDTO) {
+        PageBean<QuestionSubmitVO> pageBean = questionSubmitService.pageQuestionSubmitVos(questionSubmitPageDTO);
         return Result.success(pageBean);
     }
 }
