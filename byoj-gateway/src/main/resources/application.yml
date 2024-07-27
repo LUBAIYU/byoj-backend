@@ -34,3 +34,7 @@ knife4j:
     discover:
       enabled: true
       version: swagger2
+# JWT签名密钥
+jwt:
+  encrypt:
+    secretKey: aB9KlMzE3QwS5X8YcVtRgUyHnJmP2W6OxZs7TfLdNe
