@@ -23,5 +23,5 @@ public interface CommonConstants {
     /**
      * 白名单路径
      */
-    List<String> PATH_WHITE_LIST = Arrays.asList("/user/login", "/user/register");
+    List<String> PATH_WHITE_LIST = Arrays.asList("/v2/api-docs", "/user/login", "/user/register");
 }

@@ -7,9 +7,6 @@ spring:
   # 服务名称
   application:
     name: byoj-question
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   # 数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
