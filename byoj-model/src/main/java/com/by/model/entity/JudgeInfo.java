@@ -13,14 +13,14 @@ import java.io.Serializable;
 public class JudgeInfo implements Serializable {
 
     /**
-     * 正常信息
+     * 判题状态
      */
-    private String message;
+    private Integer status;
 
     /**
-     * 错误信息
+     * 判题信息
      */
-    private String errorMessage;
+    private String message;
 
     /**
      * 内存占用
