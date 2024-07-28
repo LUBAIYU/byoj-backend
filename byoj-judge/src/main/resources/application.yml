@@ -1,2 +1,20 @@
 server:
   port: 8030
+  # 全局请求前缀
+  servlet:
+    context-path: /oj/judge
+spring:
+  # 服务名称
+  application:
+    name: byoj-judge
+  # rabbitmq配置
+  rabbitmq:
+    host: 192.168.198.135
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    # nacos配置
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848

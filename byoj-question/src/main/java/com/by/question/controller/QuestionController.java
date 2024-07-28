@@ -6,10 +6,7 @@ import com.by.common.enums.RoleEnum;
 import com.by.common.exception.ServerException;
 import com.by.common.utils.PageBean;
 import com.by.common.utils.Result;
-import com.by.model.dto.QuestionAddDTO;
-import com.by.model.dto.QuestionPageDTO;
-import com.by.model.dto.QuestionSubmitPageDTO;
-import com.by.model.dto.QuestionUpdateDTO;
+import com.by.model.dto.*;
 import com.by.model.entity.Question;
 import com.by.model.vo.QuestionSubmitVO;
 import com.by.model.vo.QuestionVO;
@@ -93,5 +90,12 @@ public class QuestionController {
     public Result<PageBean<QuestionSubmitVO>> listQuestionSubmitVosByPage(@Valid @RequestBody QuestionSubmitPageDTO questionSubmitPageDTO) {
         PageBean<QuestionSubmitVO> pageBean = questionSubmitService.pageQuestionSubmitVos(questionSubmitPageDTO);
         return Result.success(pageBean);
+    }
+
+    @PreAuthorize(role = RoleEnum.USER)
+    @PostMapping("/do")
+    public Result<Long> doQuestionSubmit(@Valid @RequestBody QuestionSubmitDTO questionSubmitDTO) {
+        Long id = questionSubmitService.doQuestionSubmit(questionSubmitDTO);
+        return Result.success(id);
     }
 }
