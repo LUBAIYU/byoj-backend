@@ -4,6 +4,7 @@ import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTException;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
+import com.by.common.constant.CommonConstants;
 import com.by.common.utils.Result;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,10 +34,6 @@ import java.time.ZonedDateTime;
 @Slf4j
 public class MyGlobalFilter implements GlobalFilter {
 
-    public static final String AUTHORIZATION = "Authorization";
-
-    public static final String TOKEN_PREFIX = "Bearer";
-
     @Value("${jwt.encrypt.secretKey}")
     private String secretKey;
 
@@ -45,19 +42,28 @@ public class MyGlobalFilter implements GlobalFilter {
         ServerHttpRequest request = exchange.getRequest();
         ServerHttpResponse response = exchange.getResponse();
         HttpHeaders headers = request.getHeaders();
+        // 判断当前操作是否是登录注册
+        String path = request.getURI().getPath();
+        for (String item : CommonConstants.PATH_WHITE_LIST) {
+            // 如果路径包含白名单，直接放行
+            if (path.contains(item)) {
+                return chain.filter(exchange);
+            }
+        }
+
         // 获取请求头中的Authorization
-        String authorization = headers.getFirst(AUTHORIZATION);
+        String authorization = headers.getFirst(CommonConstants.AUTHORIZATION);
         String message;
 
         // 校验格式是否正确
-        if (authorization == null || !authorization.startsWith(TOKEN_PREFIX)) {
+        if (authorization == null || !authorization.startsWith(CommonConstants.TOKEN_PREFIX)) {
             message = "Invalid or missing authorization header";
             log.error(message);
             return denyRequest(response, HttpStatus.UNAUTHORIZED, message);
         }
 
         // 获取Token
-        String token = authorization.substring(TOKEN_PREFIX.length()).trim();
+        String token = authorization.substring(CommonConstants.TOKEN_PREFIX.length()).trim();
         if (token.isEmpty()) {
             message = "Token is empty";
             log.error(message);
