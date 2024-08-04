@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.by.common.constant.QuestionConstants;
 import com.by.common.enums.ErrorCode;
 import com.by.common.enums.LanguageEnum;
+import com.by.common.enums.QuestionSubmitStatusEnum;
 import com.by.common.exception.ServerException;
 import com.by.common.utils.PageBean;
 import com.by.model.dto.QuestionSubmitDTO;
@@ -104,14 +105,17 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
                 .language(language)
                 .questionId(questionId)
                 .userId(userId)
+                .status(QuestionSubmitStatusEnum.WAITING.getValue())
                 .build();
         boolean save = this.save(questionSubmit);
         if (!save) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, QuestionConstants.QUESTION_SUBMIT_ADD_ERROR);
         }
+
         // 异步发送题目提交ID到消息队列
         Long questionSubmitId = questionSubmit.getId();
         rabbitTemplate.convertAndSend(QuestionConstants.EXCHANGE_NAME, QuestionConstants.ROUTING_KEY, String.valueOf(questionSubmitId));
+
         return questionSubmitId;
     }
 }

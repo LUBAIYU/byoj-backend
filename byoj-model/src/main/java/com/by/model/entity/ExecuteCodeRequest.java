@@ -1,5 +1,6 @@
 package com.by.model.entity;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.List;
  * @author lzh
  */
 @Data
+@Builder
 public class ExecuteCodeRequest {
     /**
      * 代码

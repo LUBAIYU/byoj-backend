@@ -16,4 +16,12 @@ public interface QuestionConstants {
     String QUEUE_NAME = "oj_queue";
 
     String ROUTING_KEY = "oj_routingKey";
+
+    String QUESTION_SUBMIT_ID_NOT_EXIST = "题目提交id不存在";
+
+    String QUESTION_SUBMIT_NOT_EXIST = "题目提交信息不存在";
+
+    String QUESTION_SUBMIT_ERROR = "题目判题中，请勿重复提交";
+
+    String QUESTION_JUDGE_ERROR = "判题失败";
 }
