@@ -24,4 +24,6 @@ public interface QuestionConstants {
     String QUESTION_SUBMIT_ERROR = "题目判题中，请勿重复提交";
 
     String QUESTION_JUDGE_ERROR = "判题失败";
+
+    String QUESTION_JUDGE_NOT_PASS = "题目不通过";
 }
