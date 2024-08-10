@@ -24,4 +24,14 @@ public interface CommonConstants {
      * 白名单路径
      */
     List<String> PATH_WHITE_LIST = Arrays.asList("/v2/api-docs", "/user/login", "/user/register");
+
+    /**
+     * 认证请求头
+     */
+    String AUTH_REQUEST_HEADER = "byoj-auth";
+
+    /**
+     * 认证请求头密钥
+     */
+    String AUTH_REQUEST_SECRET = "byoj-secret";
 }
