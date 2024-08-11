@@ -2,10 +2,10 @@ package com.by.judge.codesandbox;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONUtil;
 import com.by.common.constant.CommonConstants;
 import com.by.model.entity.ExecuteCodeRequest;
 import com.by.model.entity.ExecuteCodeResponse;
-import com.google.gson.Gson;
 
 /**
  * 本地代码沙箱
@@ -16,16 +16,16 @@ public class NativeCodeSandBox implements CodeSandBox {
     @Override
     public ExecuteCodeResponse executeCode(ExecuteCodeRequest executeCodeRequest) {
         // JSON转换
-        Gson gson = new Gson();
-        String requestJson = gson.toJson(executeCodeRequest);
+        String url = "http://localhost:9000/codesandbox/execute";
+        String jsonStr = JSONUtil.toJsonStr(executeCodeRequest);
 
         // 构建请求
-        HttpRequest httpRequest = HttpUtil.createPost("http://localhost:9000/codesandbox/execute")
+        HttpRequest httpRequest = HttpUtil.createPost(url)
                 .header(CommonConstants.AUTH_REQUEST_HEADER, CommonConstants.AUTH_REQUEST_SECRET)
-                .body(requestJson, "application/json");
+                .body(jsonStr);
 
         // 发送请求获取返回值
         String body = httpRequest.execute().body();
-        return gson.fromJson(body, ExecuteCodeResponse.class);
+        return JSONUtil.toBean(body, ExecuteCodeResponse.class);
     }
 }

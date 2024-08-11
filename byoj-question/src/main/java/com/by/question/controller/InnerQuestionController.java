@@ -27,9 +27,9 @@ public class InnerQuestionController {
     private QuestionSubmitService questionSubmitService;
 
     @GetMapping("/submit/get")
-    public QuestionSubmitVO getQuestionSubmitById(@RequestParam("id") @NotNull Long id) {
+    public QuestionSubmit getQuestionSubmitById(@RequestParam("id") @NotNull Long id) {
         QuestionSubmit questionSubmit = questionSubmitService.getById(id);
-        return BeanUtil.toBean(questionSubmit, QuestionSubmitVO.class);
+        return BeanUtil.toBean(questionSubmit, QuestionSubmit.class);
     }
 
     @PostMapping("/submit/update")

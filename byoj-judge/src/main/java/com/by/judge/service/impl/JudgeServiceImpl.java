@@ -4,15 +4,16 @@ import com.by.common.constant.QuestionConstants;
 import com.by.common.enums.ErrorCode;
 import com.by.common.enums.QuestionSubmitStatusEnum;
 import com.by.common.exception.ServerException;
+import com.by.judge.codesandbox.CodeSandBox;
 import com.by.judge.codesandbox.CodeSandBoxFactory;
 import com.by.judge.feign.QuestionFeignClient;
-import com.by.judge.codesandbox.CodeSandBox;
 import com.by.judge.service.JudgeService;
 import com.by.judge.strategy.JudgeManager;
 import com.by.model.entity.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 /**
  * @author lzh
  */
+@Service
 public class JudgeServiceImpl implements JudgeService {
 
     @Resource
@@ -64,12 +66,12 @@ public class JudgeServiceImpl implements JudgeService {
         String code = questionSubmit.getCode();
         String language = questionSubmit.getLanguage();
 
+        ExecuteCodeRequest executeCodeRequest = new ExecuteCodeRequest();
+        executeCodeRequest.setCode(code);
+        executeCodeRequest.setLanguage(language);
+        executeCodeRequest.setInputList(exampleInputList);
+
         // 调用代码沙箱获取执行结果
-        ExecuteCodeRequest executeCodeRequest = ExecuteCodeRequest.builder()
-                .code(code)
-                .language(language)
-                .inputList(exampleInputList)
-                .build();
         CodeSandBox codeSandBox = CodeSandBoxFactory.newInstance(type);
         ExecuteCodeResponse executeCodeResponse = codeSandBox.executeCode(executeCodeRequest);
 

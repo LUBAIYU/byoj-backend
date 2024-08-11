@@ -39,6 +39,8 @@ public class MessageConsumer {
         try {
             // 执行判题
             judgeService.doJudge(questionSubmitId);
+            // 确认消息
+            channel.basicAck(deliveryTag, false);
         } catch (Exception e) {
             // 拒绝消息
             channel.basicNack(deliveryTag, false, false);

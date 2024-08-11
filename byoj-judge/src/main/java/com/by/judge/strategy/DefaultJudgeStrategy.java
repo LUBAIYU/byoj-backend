@@ -23,6 +23,12 @@ public class DefaultJudgeStrategy implements JudgeStrategy {
         JudgeConfig judgeConfig = judgeContext.getJudgeConfig();
         Long memoryUsage = judgeContext.getMemoryUsage();
         Long timeUsage = judgeContext.getTimeUsage();
+        if (memoryUsage == null) {
+            memoryUsage = 0L;
+        }
+        if (timeUsage == null) {
+            timeUsage = 0L;
+        }
 
         // 创建判题信息
         JudgeInfo judgeInfo = new JudgeInfo();
