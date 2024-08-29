@@ -32,14 +32,14 @@ public class QuestionSubmitVO implements Serializable {
     private Integer status;
 
     /**
-     * 题目ID
+     * 题目名称
      */
-    private Long questionId;
+    private String questionName;
 
     /**
-     * 用户ID
+     * 用户名
      */
-    private Long userId;
+    private String userName;
 
     /**
      * 创建时间

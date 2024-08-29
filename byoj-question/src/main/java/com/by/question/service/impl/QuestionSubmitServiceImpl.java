@@ -47,33 +47,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Override
     public PageBean<QuestionSubmitVO> pageQuestionSubmitVos(QuestionSubmitPageDTO questionSubmitPageDTO) {
-        // 获取参数
-        String language = questionSubmitPageDTO.getLanguage();
-        Long questionId = questionSubmitPageDTO.getQuestionId();
-        Integer current = questionSubmitPageDTO.getCurrent();
-        Integer pageSize = questionSubmitPageDTO.getPageSize();
-        // 添加分页条件
-        Page<QuestionSubmit> page = new Page<>(current, pageSize);
-        // 添加查询条件
-        LambdaQueryWrapper<QuestionSubmit> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(StrUtil.isNotBlank(language), QuestionSubmit::getLanguage, language);
-        wrapper.eq(questionId != null, QuestionSubmit::getQuestionId, questionId);
-        // 查询
-        this.page(page, wrapper);
-        // 封装返回值
-        long total = page.getTotal();
-        List<QuestionSubmit> records = page.getRecords();
-        List<QuestionSubmitVO> questionSubmitVOList = new ArrayList<>();
-        // 如果为空直接返回
-        if (records.isEmpty()) {
-            return PageBean.of(total, questionSubmitVOList);
-        }
-        questionSubmitVOList = records.stream().map(questionSubmit -> {
-            QuestionSubmitVO questionSubmitVO = new QuestionSubmitVO();
-            BeanUtil.copyProperties(questionSubmit, questionSubmitVO);
-            return questionSubmitVO;
-        }).collect(Collectors.toList());
-        return PageBean.of(total, questionSubmitVOList);
+        return null;
     }
 
     @Override
@@ -111,6 +85,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if (!save) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, QuestionConstants.QUESTION_SUBMIT_ADD_ERROR);
         }
+
+        // 更新题目的提交数
+        question.setSubmitNum(question.getSubmitNum() + 1);
+        questionService.updateById(question);
 
         // 异步发送题目提交ID到消息队列
         Long questionSubmitId = questionSubmit.getId();

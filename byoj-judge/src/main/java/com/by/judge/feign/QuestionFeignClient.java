@@ -42,4 +42,13 @@ public interface QuestionFeignClient {
      */
     @GetMapping("/get")
     Question getQuestionById(@RequestParam("id") @NotNull Long id);
+
+    /**
+     * 根据ID更新题目信息
+     *
+     * @param question 题目信息
+     * @return 是否更新成功
+     */
+    @PostMapping("/update")
+    Boolean updateQuestionById(@RequestBody Question question);
 }

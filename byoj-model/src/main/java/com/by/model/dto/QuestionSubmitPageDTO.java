@@ -18,7 +18,7 @@ public class QuestionSubmitPageDTO extends PageRequest<QuestionSubmit> implement
      */
     private String language;
     /**
-     * 题目ID
+     * 题目名称
      */
-    private Long questionId;
+    private String questionName;
 }

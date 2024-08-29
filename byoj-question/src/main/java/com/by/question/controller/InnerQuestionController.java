@@ -41,4 +41,9 @@ public class InnerQuestionController {
     public Question getQuestionById(@RequestParam("id") @NotNull Long id) {
         return questionService.getById(id);
     }
+
+    @PostMapping("/update")
+    public Boolean updateQuestionById(@RequestBody Question question) {
+        return questionService.updateById(question);
+    }
 }

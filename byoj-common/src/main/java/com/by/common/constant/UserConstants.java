@@ -10,4 +10,5 @@ public interface UserConstants {
     String PASSWORD_NOT_SAME = "密码不一致";
     String USER_ACCOUNT_EXISTS = "账号已存在";
     String ACCOUNT_PASSWORD_ERROR = "账号或密码错误";
+    String ACCOUNT_FORBIDDEN = "账号已被禁用，请联系管理员";
 }

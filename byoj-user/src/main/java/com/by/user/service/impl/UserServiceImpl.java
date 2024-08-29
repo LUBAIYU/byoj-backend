@@ -98,6 +98,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!dbUser.getUserPassword().equals(md5Password)) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, UserConstants.ACCOUNT_PASSWORD_ERROR);
         }
+
+        // 判断用户是否被禁用
+        if (StatusEnum.DISABLE.getValue().equals(dbUser.getStatus())) {
+            throw new ServerException(ErrorCode.PARAMS_ERROR, UserConstants.ACCOUNT_FORBIDDEN);
+        }
+
         // 生成JWT令牌
         Map<String, Object> payload = new HashMap<>(5);
         // 存放用户ID

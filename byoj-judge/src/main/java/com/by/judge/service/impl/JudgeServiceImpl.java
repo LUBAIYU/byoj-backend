@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -35,6 +36,7 @@ public class JudgeServiceImpl implements JudgeService {
     private String type;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void doJudge(long questionSubmitId) {
         // 查看题目提交信息
         if (questionSubmitId <= 0) {
@@ -100,6 +102,13 @@ public class JudgeServiceImpl implements JudgeService {
         Boolean res = questionFeignClient.updateQuestionSubmit(questionSubmit);
         if (!res) {
             throw new ServerException(ErrorCode.SYSTEM_ERROR, QuestionConstants.QUESTION_JUDGE_ERROR);
+        }
+
+        // 如果题目状态为通过则更新题目通过数
+        Integer judgeStatus = judgeInfo.getStatus();
+        if (QuestionSubmitStatusEnum.ACCEPTED.getValue().equals(judgeStatus)) {
+            question.setAcceptNum(question.getAcceptNum() + 1);
+            questionFeignClient.updateQuestionById(question);
         }
     }
 }
