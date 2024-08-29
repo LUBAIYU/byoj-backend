@@ -32,7 +32,7 @@ public class QuestionSubmitVO implements Serializable {
     private Integer status;
 
     /**
-     * 题目名称
+     * 题目
      */
     private String questionName;
 

@@ -23,4 +23,29 @@
         user_id,create_time,update_time,
         is_deleted
     </sql>
+
+    <select id="pageQuestionSubmitVos" resultType="com.by.model.vo.QuestionSubmitVO">
+        select
+        qs.id,
+        qs.language,
+        qs.judge_info,
+        qs.status,
+        qu.title as questionName,
+        user.user_name as userName,
+        qs.create_time
+        from question_submit qs
+        left join question qu
+        on qs.question_id = qu.id
+        left join user
+        on qs.user_id = user.id
+        <where>
+            <if test="dto.language != null and dto.language != ''">
+                qs.language = #{dto.language}
+            </if>
+            <if test="dto.questionName != null and dto.questionName != ''">
+                and qu.title like concat('%',#{dto.questionName},'%')
+            </if>
+        </where>
+        order by qs.create_time desc
+    </select>
 </mapper>

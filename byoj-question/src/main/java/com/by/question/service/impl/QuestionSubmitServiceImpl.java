@@ -3,6 +3,7 @@ package com.by.question.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.by.common.constant.QuestionConstants;
@@ -45,9 +46,14 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     private RabbitTemplate rabbitTemplate;
 
+    @Resource
+    private QuestionSubmitMapper questionSubmitMapper;
+
     @Override
     public PageBean<QuestionSubmitVO> pageQuestionSubmitVos(QuestionSubmitPageDTO questionSubmitPageDTO) {
-        return null;
+        IPage<QuestionSubmit> pagination = new Page<>(questionSubmitPageDTO.getCurrent(), questionSubmitPageDTO.getPageSize());
+        IPage<QuestionSubmitVO> pageResult = questionSubmitMapper.pageQuestionSubmitVos(pagination, questionSubmitPageDTO);
+        return PageBean.of(pageResult.getTotal(), pageResult.getRecords());
     }
 
     @Override
