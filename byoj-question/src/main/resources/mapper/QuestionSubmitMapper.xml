@@ -5,16 +5,16 @@
 <mapper namespace="com.by.question.mapper.QuestionSubmitMapper">
 
     <resultMap id="BaseResultMap" type="com.by.model.entity.QuestionSubmit">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="language" column="language" jdbcType="VARCHAR"/>
-            <result property="code" column="code" jdbcType="VARCHAR"/>
-            <result property="judgeInfo" column="judge_info" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="questionId" column="question_id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="language" column="language" jdbcType="VARCHAR"/>
+        <result property="code" column="code" jdbcType="VARCHAR"/>
+        <result property="judgeInfo" column="judge_info" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="questionId" column="question_id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDeleted" column="is_deleted" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -31,7 +31,6 @@
         qs.judge_info,
         qs.status,
         qu.title as questionName,
-        user.user_name as userName,
         qs.create_time
         from question_submit qs
         left join question qu
@@ -44,6 +43,9 @@
             </if>
             <if test="dto.questionName != null and dto.questionName != ''">
                 and qu.title like concat('%',#{dto.questionName},'%')
+            </if>
+            <if test="userRole != 0">
+                and qs.user_id = #{userId}
             </if>
         </where>
         order by qs.create_time desc

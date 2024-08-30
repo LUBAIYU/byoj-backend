@@ -1,11 +1,9 @@
 package com.by.common.aop;
 
-import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.JWTUtil;
 import com.by.common.annotation.PreAuthorize;
-import com.by.common.constant.CommonConstants;
 import com.by.common.enums.ErrorCode;
 import com.by.common.exception.ServerException;
+import com.by.common.utils.JwtUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -37,13 +35,8 @@ public class AuthenticateAspect {
         // 获取请求对象
         RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-        // 获取请求头
-        String authorization = request.getHeader(CommonConstants.AUTHORIZATION);
-        // 获取Token
-        String token = authorization.substring(CommonConstants.TOKEN_PREFIX.length()).trim();
-        // 解析Token获取用户角色
-        JWT jwt = JWTUtil.parseToken(token);
-        int role = Integer.parseInt(jwt.getPayload("role").toString());
+        // 获取用户角色
+        int role = JwtUtil.getUserRole(request);
         // 判断权限
         Integer userRole = preAuthorize.role().getValue();
         if (role != 0 && role != userRole) {

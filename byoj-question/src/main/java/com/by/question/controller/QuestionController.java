@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -87,8 +88,8 @@ public class QuestionController {
 
     @PreAuthorize(role = RoleEnum.USER)
     @PostMapping("/submit/page")
-    public Result<PageBean<QuestionSubmitVO>> listQuestionSubmitVosByPage(@Valid @RequestBody QuestionSubmitPageDTO questionSubmitPageDTO) {
-        PageBean<QuestionSubmitVO> pageBean = questionSubmitService.pageQuestionSubmitVos(questionSubmitPageDTO);
+    public Result<PageBean<QuestionSubmitVO>> listQuestionSubmitVosByPage(@Valid @RequestBody QuestionSubmitPageDTO questionSubmitPageDTO, HttpServletRequest request) {
+        PageBean<QuestionSubmitVO> pageBean = questionSubmitService.pageQuestionSubmitVos(questionSubmitPageDTO, request);
         return Result.success(pageBean);
     }
 

@@ -37,11 +37,6 @@ public class QuestionSubmitVO implements Serializable {
     private String questionName;
 
     /**
-     * 用户名
-     */
-    private String userName;
-
-    /**
      * 创建时间
      */
     private LocalDateTime createTime;

@@ -19,9 +19,11 @@ public interface QuestionSubmitMapper extends BaseMapper<QuestionSubmit> {
      *
      * @param pagination            分页条件
      * @param questionSubmitPageDTO 查询条件
+     * @param userRole              用户角色
+     * @param userId                用户ID
      * @return 查询结果
      */
-    IPage<QuestionSubmitVO> pageQuestionSubmitVos(@Param("pagination") IPage<QuestionSubmit> pagination, @Param("dto") QuestionSubmitPageDTO questionSubmitPageDTO);
+    IPage<QuestionSubmitVO> pageQuestionSubmitVos(@Param("pagination") IPage<QuestionSubmit> pagination, @Param("dto") QuestionSubmitPageDTO questionSubmitPageDTO, @Param("userRole") Integer userRole, @Param("userId") Long userId);
 }
 
 

@@ -11,6 +11,7 @@ import com.by.common.enums.ErrorCode;
 import com.by.common.enums.LanguageEnum;
 import com.by.common.enums.QuestionSubmitStatusEnum;
 import com.by.common.exception.ServerException;
+import com.by.common.utils.JwtUtil;
 import com.by.common.utils.PageBean;
 import com.by.model.dto.QuestionSubmitDTO;
 import com.by.model.dto.QuestionSubmitPageDTO;
@@ -26,6 +27,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,9 +52,14 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     private QuestionSubmitMapper questionSubmitMapper;
 
     @Override
-    public PageBean<QuestionSubmitVO> pageQuestionSubmitVos(QuestionSubmitPageDTO questionSubmitPageDTO) {
+    public PageBean<QuestionSubmitVO> pageQuestionSubmitVos(QuestionSubmitPageDTO questionSubmitPageDTO, HttpServletRequest request) {
+        // 获取登录用户ID
+        Long userId = JwtUtil.getUserId(request);
+        // 获取登录用户角色
+        Integer userRole = JwtUtil.getUserRole(request);
+        // 构建分页条件
         IPage<QuestionSubmit> pagination = new Page<>(questionSubmitPageDTO.getCurrent(), questionSubmitPageDTO.getPageSize());
-        IPage<QuestionSubmitVO> pageResult = questionSubmitMapper.pageQuestionSubmitVos(pagination, questionSubmitPageDTO);
+        IPage<QuestionSubmitVO> pageResult = questionSubmitMapper.pageQuestionSubmitVos(pagination, questionSubmitPageDTO, userRole, userId);
         return PageBean.of(pageResult.getTotal(), pageResult.getRecords());
     }
 
