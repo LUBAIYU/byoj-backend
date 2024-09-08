@@ -13,7 +13,7 @@ public enum LanguageEnum {
      * 语言类型枚举
      */
     JAVA("Java", "java"),
-    CPP("C++", "c++"),
+    JS("JavaScript", "javascript"),
     GOLANG("Go", "go");
 
     private final String label;

@@ -16,12 +16,12 @@ public class JudgeManager {
 
     public void selectStrategy(String language) {
         switch (language) {
-            case "cpp":
-                judgeStrategy = new CppJudgeStrategy();
+            case "js":
+                judgeStrategy = new JsJudgeStrategy();
                 break;
             case "java":
             default:
-                judgeStrategy = new DefaultJudgeStrategy();
+                judgeStrategy = new JavaJudgeStrategy();
         }
     }
 

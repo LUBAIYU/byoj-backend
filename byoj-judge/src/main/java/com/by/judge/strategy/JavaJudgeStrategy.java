@@ -9,11 +9,11 @@ import com.by.model.entity.JudgeInfo;
 import java.util.List;
 
 /**
- * 默认判题策略（Java语言）
+ * Java语言判题策略
  *
  * @author lzh
  */
-public class DefaultJudgeStrategy implements JudgeStrategy {
+public class JavaJudgeStrategy implements JudgeStrategy {
     @Override
     public JudgeInfo doJudgeByStrategy(JudgeContext judgeContext) {
         // 获取请求参数
