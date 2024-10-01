@@ -1,8 +1,5 @@
 package com.by.question.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,17 +17,15 @@ import com.by.model.entity.QuestionSubmit;
 import com.by.model.entity.User;
 import com.by.model.vo.QuestionSubmitVO;
 import com.by.question.feign.UserFeignClient;
+import com.by.question.mapper.QuestionSubmitMapper;
 import com.by.question.service.QuestionService;
 import com.by.question.service.QuestionSubmitService;
-import com.by.question.mapper.QuestionSubmitMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author lzh
@@ -64,27 +59,32 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Long doQuestionSubmit(QuestionSubmitDTO questionSubmitDTO) {
         // 获取请求参数
         String code = questionSubmitDTO.getCode();
         String language = questionSubmitDTO.getLanguage();
         Long questionId = questionSubmitDTO.getQuestionId();
         Long userId = questionSubmitDTO.getUserId();
+
         // 判断编程语言是否符合要求
         LanguageEnum languageEnum = LanguageEnum.getEnumByValue(language);
         if (languageEnum == null) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, QuestionConstants.LANGUAGE_NOT_SUPPORT);
         }
+
         // 判断题目是否存在
         Question question = questionService.getById(questionId);
         if (question == null) {
             throw new ServerException(ErrorCode.NOT_FOUND_ERROR);
         }
+
         // 判断用户是否存在
         User user = userFeignClient.getById(userId);
         if (user == null) {
             throw new ServerException(ErrorCode.NOT_FOUND_ERROR);
         }
+
         // 插入数据
         QuestionSubmit questionSubmit = QuestionSubmit
                 .builder()

@@ -1,21 +1,22 @@
 package com.by.question.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.by.common.enums.ErrorCode;
 import com.by.common.exception.ServerException;
 import com.by.common.utils.PageBean;
+import com.by.model.dto.QuestionAddDTO;
 import com.by.model.dto.QuestionPageDTO;
+import com.by.model.dto.QuestionUpdateDTO;
 import com.by.model.entity.JudgeCase;
 import com.by.model.entity.JudgeConfig;
-import com.by.model.dto.QuestionAddDTO;
-import com.by.model.dto.QuestionUpdateDTO;
 import com.by.model.entity.Question;
 import com.by.model.vo.QuestionVO;
-import com.by.question.service.QuestionService;
 import com.by.question.mapper.QuestionMapper;
+import com.by.question.service.QuestionService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Service;
@@ -39,29 +40,30 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     @Override
     public long addQuestion(QuestionAddDTO questionAddDTO) {
         // 获取参数
-        String title = questionAddDTO.getTitle();
-        String content = questionAddDTO.getContent();
-        String answer = questionAddDTO.getAnswer();
         List<String> tagList = questionAddDTO.getTagList();
         List<JudgeCase> judgeCaseDTOList = questionAddDTO.getJudgeCaseDTOList();
         JudgeConfig judgeConfigDTO = questionAddDTO.getJudgeConfigDTO();
+
         // 将标签列表转换成JSON字符串
         Gson gson = new Gson();
         String tags = gson.toJson(tagList);
+
         // 将判题用例和判题配置转换成JSON字符串
         String judgeCase = gson.toJson(judgeCaseDTOList);
         String judgeConfig = gson.toJson(judgeConfigDTO);
+
         // 创建题目
         Question question = Question.builder()
-                .title(title)
-                .content(content)
-                .answer(answer)
+                .title(questionAddDTO.getTitle())
+                .content(questionAddDTO.getContent())
+                .answer(questionAddDTO.getAnswer())
                 .tags(tags)
                 .judgeCase(judgeCase)
                 .judgeConfig(judgeConfig)
                 .submitNum(0)
                 .acceptNum(0)
                 .build();
+
         // 插入数据
         boolean save = this.save(question);
         if (!save) {
@@ -91,13 +93,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         List<String> tagList = questionUpdateDTO.getTagList();
         List<JudgeCase> judgeCaseDTOList = questionUpdateDTO.getJudgeCaseDTOList();
         JudgeConfig judgeConfigDTO = questionUpdateDTO.getJudgeConfigDTO();
+
         // 转为JSON
         Gson gson = new Gson();
-        if (!CollectionUtils.isEmpty(tagList)) {
+        if (CollectionUtil.isNotEmpty(tagList)) {
             String tags = gson.toJson(tagList);
             question.setTags(tags);
         }
-        if (!CollectionUtils.isEmpty(judgeCaseDTOList)) {
+        if (CollectionUtil.isNotEmpty(judgeCaseDTOList)) {
             String judgeCase = gson.toJson(judgeCaseDTOList);
             question.setJudgeCase(judgeCase);
         }
@@ -105,6 +108,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
             String judgeConfig = gson.toJson(judgeConfigDTO);
             question.setJudgeConfig(judgeConfig);
         }
+
         // 更新数据
         boolean update = this.updateById(question);
         if (!update) {
@@ -119,10 +123,12 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         if (question == null) {
             throw new ServerException(ErrorCode.NOT_FOUND_ERROR);
         }
+
         QuestionVO questionVO = new QuestionVO();
         BeanUtil.copyProperties(question, questionVO);
         String tags = question.getTags();
         String judgeConfig = question.getJudgeConfig();
+
         // 将JSON字符串转为对象
         Gson gson = new Gson();
         List<String> tagList = gson.fromJson(tags, new TypeToken<List<String>>() {
@@ -137,14 +143,17 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     public PageBean<QuestionVO> pageQuestionVos(QuestionPageDTO questionPageDTO) {
         // 获取题目列表
         IPage<Question> questionIpage = questionMapper.pageQuestionVos(questionPageDTO.toPagination(), questionPageDTO);
+
         // 获取题目数据
         long total = questionIpage.getTotal();
         List<Question> records = questionIpage.getRecords();
         List<QuestionVO> questionVOList = new ArrayList<>();
+
         // 如果为空直接返回
         if (CollectionUtils.isEmpty(records)) {
             return PageBean.of(total, questionVOList);
         }
+
         // 封装返回数据
         Gson gson = new Gson();
         questionVOList = records.stream().map(question -> {
@@ -167,9 +176,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
     @Override
     public PageBean<Question> pageQuestions(QuestionPageDTO questionPageDTO) {
         IPage<Question> questionIpage = questionMapper.pageQuestionVos(questionPageDTO.toPagination(), questionPageDTO);
-        long total = questionIpage.getTotal();
-        List<Question> records = questionIpage.getRecords();
-        return PageBean.of(total, records);
+        return PageBean.of(questionIpage.getTotal(), questionIpage.getRecords());
     }
 }
 
