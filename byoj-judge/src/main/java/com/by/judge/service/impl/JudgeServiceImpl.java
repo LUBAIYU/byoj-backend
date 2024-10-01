@@ -105,8 +105,7 @@ public class JudgeServiceImpl implements JudgeService {
         }
 
         // 如果题目状态为通过则更新题目通过数
-        Integer judgeStatus = judgeInfo.getStatus();
-        if (QuestionSubmitStatusEnum.ACCEPTED.getValue().equals(judgeStatus)) {
+        if (QuestionSubmitStatusEnum.ACCEPTED.getValue().equals(judgeInfo.getStatus())) {
             question.setAcceptNum(question.getAcceptNum() + 1);
             questionFeignClient.updateQuestionById(question);
         }
