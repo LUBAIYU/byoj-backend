@@ -51,20 +51,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String userAccount = userRegisterDTO.getUserAccount();
         String userPassword = userRegisterDTO.getUserPassword();
         String checkPassword = userRegisterDTO.getCheckPassword();
+
         // 校验密码和确认密码是否一致
         if (!userPassword.equals(checkPassword)) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, UserConstants.PASSWORD_NOT_SAME);
         }
+
         // 判断账号是否存在
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUserAccount, userAccount);
-        User dbUser = this.getOne(wrapper);
+        User dbUser = this.lambdaQuery()
+                .eq(User::getUserAccount, userAccount)
+                .one();
         if (dbUser != null) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, UserConstants.USER_ACCOUNT_EXISTS);
         }
+
         // 用户密码加密
         String salt = RandomUtil.randomString(4);
         String encryptPassword = DigestUtil.md5Hex(userPassword + salt);
+
         // 保存用户数据
         User user = User.builder()
                 .userAccount(userAccount)
@@ -85,13 +89,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 获取参数
         String userAccount = userLoginDTO.getUserAccount();
         String userPassword = userLoginDTO.getUserPassword();
+
         // 判断用户是否存在
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUserAccount, userAccount);
-        User dbUser = this.getOne(wrapper);
+        User dbUser = this.lambdaQuery()
+                .eq(User::getUserAccount, userAccount)
+                .one();
         if (dbUser == null) {
             throw new ServerException(ErrorCode.PARAMS_ERROR, UserConstants.ACCOUNT_PASSWORD_ERROR);
         }
+
         // 判断密码是否正确
         String salt = dbUser.getSalt();
         String md5Password = DigestUtil.md5Hex(userPassword + salt);
@@ -169,15 +175,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public PageBean<User> listUserByPage(UserPageDTO userPageDTO) {
+        // 获取查询参数
+        Long id = userPageDTO.getId();
+        String userName = userPageDTO.getUserName();
+        Integer status = userPageDTO.getStatus();
+
         // 添加分页参数
         Page<User> page = new Page<>(userPageDTO.getCurrent(), userPageDTO.getPageSize());
+
+        // 获取枚举值
+        StatusEnum statusEnum = StatusEnum.getEnumByValue(status);
+
         // 添加查询参数
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getId, userPageDTO.getId());
-        queryWrapper.like(User::getUserName, userPageDTO.getUserName());
-        queryWrapper.eq(User::getStatus, userPageDTO.getStatus());
+        queryWrapper.eq(id != null, User::getId, id);
+        queryWrapper.like(StrUtil.isNotBlank(userName), User::getUserName, userName);
+        queryWrapper.eq(statusEnum != null, User::getStatus, status);
+
         // 添加排序条件
         page.addOrder(new OrderItem("createTime", false));
+
         // 查询
         this.page(page, queryWrapper);
         // 封装数据返回

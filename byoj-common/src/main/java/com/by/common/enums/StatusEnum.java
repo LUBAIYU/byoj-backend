@@ -27,4 +27,16 @@ public enum StatusEnum {
         this.value = value;
         this.label = label;
     }
+
+    public static StatusEnum getEnumByValue(Integer value) {
+        if (value == null) {
+            return null;
+        }
+        for (StatusEnum statusEnum : StatusEnum.values()) {
+            if (statusEnum.value.equals(value)) {
+                return statusEnum;
+            }
+        }
+        return null;
+    }
 }
